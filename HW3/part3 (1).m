@@ -29,12 +29,12 @@ for i = 1:M-1
 end
 
 for n = 1:N
-    A(n, N+n) = -2/3;
-    A(N*(M-1)+n, N*(M-2)+n) = -2/3;
+    A(n, N+n) = -2;
+    A(N*(M-1)+n, N*(M-2)+n) = -2;
 end
 
 A = -(1/h^2)*A;
-A = (A);
+A = sparse(A);
 
 
 %% gx - matrix and f - matrix
@@ -67,15 +67,15 @@ b = fc + gx;
 
 close all, clc
 
-I = eye(N*M);   
+I = eye(N*M);
 I = sparse(I);
-taulim = 20;
+taulim = 10;
 C = 1;
 dt = C*(h^2);
 tau = dt:dt:taulim;
 
 %u0 (t=0)
-u0func = @(x,y) 40+72*x;    
+u0func = @(x,y) 40+72*x;
 u = [];
 for y = yvec
     for x = xvec
@@ -96,12 +96,8 @@ end
 Ut = U(:,1);
 Ut = reshape(Ut, N, M);
 Ut = [u0 + zeros(1,size(Ut,2)); Ut; u5 + zeros(1,size(Ut,2))];
-
-x=linspace(0,Lx,Lx/h+1);
-y=linspace(0,Ly,Ly/h+1);
-
-mesh(y,x,Ut)
-title('t = 0, h=0.1')
+mesh(Ut)
+title('t = 0')
 xlabel('y')
 ylabel('x')
 zlabel('temp')
@@ -110,8 +106,8 @@ figure
 Ut = U(:,round(0.25/dt)+1);
 Ut = reshape(Ut, N, M);
 Ut = [u0 + zeros(1,size(Ut,2)); Ut; u5 + zeros(1,size(Ut,2))];
-mesh(y,x,Ut)
-title('t = 0.25, h=0.1')
+mesh(Ut)
+title('t = 0.25')
 xlabel('y')
 ylabel('x')
 zlabel('temp')
@@ -120,8 +116,8 @@ figure
 Ut = U(:,round(1/dt)+1);
 Ut = reshape(Ut, N, M);
 Ut = [u0 + zeros(1,size(Ut,2)); Ut; u5 + zeros(1,size(Ut,2))];
-mesh(y,x,Ut)
-title('t = 1, h=0.1')
+mesh(Ut)
+title('t = 1')
 xlabel('y')
 ylabel('x')
 zlabel('temp')
@@ -130,8 +126,8 @@ figure
 Ut = U(:,round(10/dt)+1);
 Ut = reshape(Ut, N, M);
 Ut = [u0 + zeros(1,size(Ut,2)); Ut; u5 + zeros(1,size(Ut,2))];
-mesh(y,x,Ut)
-title('t = 10, h=0.1')
+mesh(Ut)
+title('t = 10')
 xlabel('y')
 ylabel('x')
 zlabel('temp')
@@ -143,7 +139,7 @@ plot(tau, Ut)
 hold on
 plot(tau, 782.4*ones(length(tau),1))
 legend('(3,1) over time', '2c', 'Location', 'Best') 
-title('(x,y) = (3,1), h=0.1')
+title('(x,y) = (3,1)')
 xlabel('time')
 ylabel('temp')
 
